@@ -1,10 +1,11 @@
-var gulp 		= require('gulp'),
+var gulp    = require('gulp'),
     sass        = require('gulp-sass'),
     rename      = require('gulp-rename'),
     cssmin      = require('gulp-minify-css'),
     prefix      = require('gulp-autoprefixer'),
     size        = require('gulp-size'),
     plumber     = require('gulp-plumber'),
+    sourcemaps  = require('gulp-sourcemaps'),
     notify      = require('gulp-notify');
 
 gulp.task('sass', function() {
@@ -19,12 +20,14 @@ gulp.task('sass', function() {
   };
 
   return gulp.src('sass/**/*.scss')
+    .pipe(sourcemaps.init())
     .pipe(plumber({errorHandler: onError}))
     .pipe(sass({
-    	errLogToConsole: true
+      errLogToConsole: true
     }))
     .pipe(size({ gzip: true, showFiles: true }))
     .pipe(prefix())
+    .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest('./css/'))
     .pipe(cssmin())
     .pipe(size({ gzip: true, showFiles: true }))
